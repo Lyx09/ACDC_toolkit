@@ -1,0 +1,1 @@
+./trish/trish_batch  csharp-tp1/ "*" | sort -rg > result.txt
