@@ -63,9 +63,13 @@ correct()
 
 		if [ $? -eq 1 ] ; then
 			echo "${RED}!!! COMPILE ERROR !!!${RESET}"
-			echo "${YELL}${BLINK}Press ENTER to continue${RESET}"
+			echo "${YELL}${BLINK}Press ENTER to continue or type something to retry${RESET}"
 			read ANSWER
-			clear
+			while [ "${ANSWER}" != "" ] ; do
+				${CSC} ${TEST_FILE} ${SOURCES} /r:nunit.framework.dll -out:${OUTFILE}
+				echo "${YELL}${BLINK}Press ENTER to continue or type something to retry${RESET}"
+				read ANSWER
+			done
 		else
 
 			while true; do
@@ -80,10 +84,10 @@ correct()
 				fi
 			done
 
-			clear
 			# Comment this line to keep the files
 			rm -f ${OUTFILE} ${OUTFILE}.VisualState.xml
 		fi
+		clear
 		COUNT=$((COUNT + 1))
 	done
 }
@@ -103,7 +107,7 @@ main()
 	read ANSWER
 	clear
 	correct
-	#clean
+	clean
 	echo ${BLUE}---[NUNIT CORRECT END]---${RESET}
 }
 
