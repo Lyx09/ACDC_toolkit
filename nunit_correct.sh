@@ -43,8 +43,6 @@ install_nunit()
 
 correct()
 {
-	echo ${BLUE} RUNNING CORRECTION ${RESET}
-
 	DIR_LIST=$(find ${SUBMISSION_DIR} -name Program.cs | grep ${SOLUTION_NAME})
 	COUNT=1
 	TOTAL=$(echo ${DIR_LIST} | wc -w)
@@ -57,15 +55,17 @@ correct()
 		for SRC in ${SRC_FILES} ; do
 			SOURCES="${SOURCES} $(dirname ${DIR}/${SRC}) "
 		done
-
 		OUTFILE="${STUDENT}_${SOLUTION_NAME}.exe"
-		${CSC} ${TEST_FILE} ${SOURCES} /r:nunit.framework.dll -out:${OUTFILE}
 
 		echo ${BLUE}Compiling...${RESET}
 		echo
+		${CSC} ${TEST_FILE} ${SOURCES} /r:nunit.framework.dll -out:${OUTFILE}
 
 		if [ $? -eq 1 ] ; then
-			echo "${RED}COMPILE ERROR${RESET}"
+			echo "${RED}!!! COMPILE ERROR !!!${RESET}"
+			echo "${YELL}${BLINK}Press ENTER to continue${RESET}"
+			read ANSWER
+			clear
 		else
 
 			while true; do
@@ -73,7 +73,7 @@ correct()
 				# Running Nunit for student submission
 				${NUNIT} ${OUTFILE} 2> /dev/null
 
-				echo "${BLINK}Press ENTER to continue, else rerun test${RESET}"
+				echo "${YELL}${BLINK}Press ENTER to continue or type something to re-run tests${RESET}"
 				read ANSWER
 				if [ "${ANSWER}" = "" ] ; then
 					break
@@ -81,10 +81,9 @@ correct()
 			done
 
 			clear
-			# Comment this line to keep the file
+			# Comment this line to keep the files
 			rm -f ${OUTFILE} ${OUTFILE}.VisualState.xml
 		fi
-
 		COUNT=$((COUNT + 1))
 	done
 }
@@ -97,8 +96,12 @@ clean()
 
 main()
 {
+	clear
 	echo ${BLUE}---[NUNIT CORRECT START]---${RESET}
 	install_nunit
+	echo "${YELL}${BLINK}Press ENTER to start correction${RESET}"
+	read ANSWER
+	clear
 	correct
 	#clean
 	echo ${BLUE}---[NUNIT CORRECT END]---${RESET}
