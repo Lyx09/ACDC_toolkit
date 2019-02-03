@@ -3,7 +3,24 @@
 For any remark and/or if you noticed a mistake please contact me.
 
 # For the ACDC-Team:
-To correct a submission one should use the scripts in the following order.
+To correct a submission one should use the scripts public.sh through run.sh in
+order. Or use correct.sh. Another solution is to use nunit_correct.sh.
+
+## nunit_correct.sh
+Requires 2 argument: Path to the submissions folder and path to the NUnit ".cs"
+test file.
+Example: ./nunit_correct.sh ../csharp-tp3/ ../ACDC-GIT/moulinette/tests_s1_tpcs3/BasicTests.cs 
+This script will automatically install NUnit(v. 2.6.4) nuget and mono via apt
+and extract nunit.framework.dll needed to compile the tests. Then for every
+student in the submission folder. the script will compile the project and run
+the tests.
+
+
+One can must change the content of the variables SOLUTION_NAME and
+SRC_FILES according to the solution to correct (These variables are set at the
+begining of the script). One may also change the CSC (C Sharp Compiler) to use
+and the NUNIT varable.
+
 
 ## public.sh
 Requires 1 argument: Path to the submissions folder.
