@@ -1,0 +1,10 @@
+nunit_correct.sh
+[X] Don't install when nunit.framework.dll already exists.
+[ ] ./nc -s solution -c csc -n nunit-gui
+[ ] Lauch NC on a specific student
+[ ] Catch signals (C^v + C^d + C^l)
+[ ] Pad announce messages in the center
+[ ] Option to specify where nunit.framework.dll is
+[X] Kill NUnit-gui when correcting next student
+[ ] Print function when asked
+[ ] Refactor
