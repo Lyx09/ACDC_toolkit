@@ -17,6 +17,7 @@ SRC_FILES="Program.cs"
 BLUE="\e[34m"
 YELL="\e[33m"
 RED="\e[31m"
+GREEN="\e[32m"
 BLINK="\e[5m"
 RESET="\e[0m"
 
@@ -75,7 +76,7 @@ correct()
 			while true; do
 
 				# Running Nunit for student submission
-				${NUNIT} ${OUTFILE} 2> /dev/null
+				(${NUNIT} ${OUTFILE} 2>/dev/null)&
 
 				echo "${YELL}${BLINK}Press ENTER to continue or type something to re-run tests${RESET}"
 				read ANSWER
@@ -102,7 +103,13 @@ main()
 {
 	clear
 	echo ${BLUE}---[NUNIT CORRECT START]---${RESET}
-	install_nunit
+	if [ ! -f nunit.framework.dll ] ; then
+		install_nunit
+		printf "NUnit framework is now installed "
+	else
+		printf "NUnit framework was already installed "
+	fi
+	echo "${GREEN}✔${RESET}"
 	echo "${YELL}${BLINK}Press ENTER to start correction${RESET}"
 	read ANSWER
 	clear
