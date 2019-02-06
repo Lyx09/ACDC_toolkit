@@ -1,18 +1,10 @@
 #!/bin/sh
 
-CSC=mcs #csc also works
-NUNIT=nunit-gui #nunit-console also works
-
 if [ $# != 2 ] ; then
 	echo "Missing argument."
 	echo "Usage: ./nunit_correct.sh SUBMISSION_DIRECTORY UNIT_TEST_FILE"
 	exit
 fi
-
-SUBMISSION_DIR=$1
-TEST_FILE=$2
-SOLUTION_NAME="Basic"
-SRC_FILES="Program.cs"
 
 BLUE="\e[34m"
 YELL="\e[33m"
@@ -20,6 +12,14 @@ RED="\e[31m"
 GREEN="\e[32m"
 BLINK="\e[5m"
 RESET="\e[0m"
+
+CSC=mcs #csc also works
+NUNIT=nunit-gui #nunit-console also works
+SUBMISSION_DIR=$1
+TEST_FILE=$2
+SOLUTION_NAME="Basic"
+SRC_FILES="Program.cs"
+NCPS1="${BLINK}>${RESET} "
 
 install_nunit()
 {
@@ -42,6 +42,68 @@ install_nunit()
 	rm -rf NUnit.2.6.4/
 }
 
+help()
+{
+	echo "--- NUnit Correct (v1.0) ---"
+	echo "help, h:     displays this menu"
+	echo "next, n:     correct the next student"
+	echo "relaunch, r: relaunch nunit"
+	echo "quit, q:     quit nunit correct"
+	echo "edit, e:     launch your prefered editor"
+	echo "display, d:  display the specified function"
+	echo "compile, c:  Compile the project once more"
+	echo "FIXME"
+	echo "----------------------------"
+}
+
+mini_cli()
+{
+	# Running Nunit for student submission
+	(${NUNIT} ${OUTFILE} 2>/dev/null)&
+	NUNIT_PID=$!
+	while true; do
+		printf "${NCPS1}"
+		read INPUT
+		if [ "${INPUT}" = "help" ] || [ "${INPUT}" = "h" ] ; then
+			help
+		elif [ "${INPUT}" = "next" ] || [ "${INPUT}" = "n" ] ; then
+			break
+		elif [ "${INPUT}" = "relaunch" ] || [ "${INPUT}" = "r" ] ; then
+			kill ${NUNIT_PID}
+			(${NUNIT} ${OUTFILE} 2>/dev/null)&
+			NUNIT_PID=$!
+		elif [ "${INPUT}" = "quit" ] || [ "${INPUT}" = "q" ] ; then
+			kill ${NUNIT_PID}
+			rm -f ${OUTFILE} ${OUTFILE}.VisualState.xml
+			clear
+			exit 0
+		elif [ "${INPUT}" = "display" ] || [ "${INPUT}" = "d" ] ; then
+			echo "FIXME"
+		elif [ "${INPUT}" = "edit" ] || [ "${INPUT}" = "e" ] ; then
+			echo "FIXME"
+		else
+			echo "Unknown command, type \"help\" to get the list of commands."
+		fi
+	done
+
+	kill ${NUNIT_PID}
+
+	# Comment this line to keep the files
+	rm -f ${OUTFILE} ${OUTFILE}.VisualState.xml
+}
+
+compile_error()
+{
+	echo "${RED}!!! COMPILE ERROR !!!${RESET}"
+	echo "${YELL}${BLINK}Press ENTER to continue or type something to retry${RESET}"
+	read ANSWER
+	while [ "${ANSWER}" != "" ] ; do
+		${CSC} ${TEST_FILE} ${SOURCES} /r:nunit.framework.dll -out:${OUTFILE}
+		echo "${YELL}${BLINK}Press ENTER to continue or type something to retry${RESET}"
+		read ANSWER
+	done
+}
+
 correct()
 {
 	DIR_LIST=$(find ${SUBMISSION_DIR} -name Program.cs | grep ${SOLUTION_NAME})
@@ -50,12 +112,13 @@ correct()
 
 	for DIR in ${DIR_LIST} ; do
 		STUDENT=$(dirname ${DIR} | sed -n 's/.*\/\([a-z\-]\+\.[a-z\-]\+\)\/.*/\1/p')
-		echo ${BLUE} STUDENT: ${YELL} ${STUDENT} ${RESET} ${COUNT}/${TOTAL}
+		echo ${BLUE}STUDENT: ${YELL} ${STUDENT} ${RESET} ${COUNT}/${TOTAL}
 
 		SOURCES=""
 		for SRC in ${SRC_FILES} ; do
 			SOURCES="${SOURCES} $(dirname ${DIR}/${SRC}) "
 		done
+
 		OUTFILE="${STUDENT}_${SOLUTION_NAME}.exe"
 
 		echo ${BLUE}Compiling...${RESET}
@@ -63,30 +126,9 @@ correct()
 		${CSC} ${TEST_FILE} ${SOURCES} /r:nunit.framework.dll -out:${OUTFILE}
 
 		if [ $? -eq 1 ] ; then
-			echo "${RED}!!! COMPILE ERROR !!!${RESET}"
-			echo "${YELL}${BLINK}Press ENTER to continue or type something to retry${RESET}"
-			read ANSWER
-			while [ "${ANSWER}" != "" ] ; do
-				${CSC} ${TEST_FILE} ${SOURCES} /r:nunit.framework.dll -out:${OUTFILE}
-				echo "${YELL}${BLINK}Press ENTER to continue or type something to retry${RESET}"
-				read ANSWER
-			done
+			compile_error
 		else
-
-			while true; do
-
-				# Running Nunit for student submission
-				(${NUNIT} ${OUTFILE} 2>/dev/null)&
-
-				echo "${YELL}${BLINK}Press ENTER to continue or type something to re-run tests${RESET}"
-				read ANSWER
-				if [ "${ANSWER}" = "" ] ; then
-					break
-				fi
-			done
-
-			# Comment this line to keep the files
-			rm -f ${OUTFILE} ${OUTFILE}.VisualState.xml
+			mini_cli
 		fi
 		clear
 		COUNT=$((COUNT + 1))
@@ -95,7 +137,6 @@ correct()
 
 clean()
 {
-	rm nunit.framework.dll
 	rm TestResult.xml
 }
 
@@ -117,7 +158,5 @@ main()
 	clean
 	echo ${BLUE}---[NUNIT CORRECT END]---${RESET}
 }
-
-
 
 main
