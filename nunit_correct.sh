@@ -17,8 +17,8 @@ CSC=mcs #csc also works
 NUNIT=nunit-gui #nunit-console also works
 SUBMISSION_DIR=$1
 TEST_FILE=$2
-SOLUTION_NAME="Basic"
-SRC_FILES="Program.cs"
+SOLUTION_NAME="TinyMarkovChain"
+SRC_FILES="Program.cs Chain.cs Word.cs"
 NCPS1="${BLINK}>${RESET} "
 
 install_nunit()
@@ -47,11 +47,17 @@ help()
 	echo "--- NUnit Correct (v1.0) ---"
 	echo "help, h:     displays this menu"
 	echo "next, n:     correct the next student"
+	echo "previous:"
 	echo "relaunch, r: relaunch nunit"
 	echo "quit, q:     quit nunit correct"
 	echo "edit, e:     launch your prefered editor"
 	echo "display, d:  display the specified function"
-	echo "compile, c:  Compile the project once more"
+	echo "compile, c:    Compile the project once more"
+	echo "tree: "
+	echo "gitlog:"
+	echo "readme:"
+
+
 	echo "FIXME"
 	echo "----------------------------"
 }
@@ -116,7 +122,7 @@ correct()
 
 		SOURCES=""
 		for SRC in ${SRC_FILES} ; do
-			SOURCES="${SOURCES} $(dirname ${DIR}/${SRC}) "
+            SOURCES="${SOURCES} $(dirname ${DIR})/${SRC}"
 		done
 
 		OUTFILE="${STUDENT}_${SOLUTION_NAME}.exe"
@@ -137,7 +143,7 @@ correct()
 
 clean()
 {
-	rm TestResult.xml
+	rm -f TestResult.xml
 }
 
 main()
