@@ -13,8 +13,8 @@ GREEN="\e[32m"
 BLINK="\e[5m"
 RESET="\e[0m"
 
-CSC=mcs #csc also works
-NUNIT=nunit-gui #nunit-console also works
+CSC=csc #csc also works
+NUNIT=tc-next.exe #nunit-gui and nunit-console also worked pre NUnit 3.0
 SUBMISSION_DIR=$1
 TEST_FILE=$2
 SOLUTION_NAME="Conquer"
@@ -24,11 +24,13 @@ NCPS1="${BLINK}>${RESET} "
 
 install_nunit()
 {
-	echo ${BLUE}Installing nunit-console nuget and mono packages...${RESET}
+	echo ${BLUE}Installing nunit-console nuget mono packages and TestCentric...${RESET}
 	sudo apt install nunit-console
 	sudo apt install nunit-gui
 	sudo apt install nuget
 	sudo apt install mono
+    git clone git@github.com:TestCentric/testcentric-gui.git
+    PATH=$PATH:${PWD}/TestCentric
 
 	echo ${BLUE}Versions:${RESET}
 	mono -V | head -1
