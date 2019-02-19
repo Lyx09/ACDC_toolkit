@@ -17,14 +17,18 @@ CSC=mcs #csc also works
 NUNIT=nunit-gui #nunit-console also works
 SUBMISSION_DIR=$1
 TEST_FILE=$2
-SOLUTION_NAME="TinyMarkovChain"
-SRC_FILES="Program.cs Chain.cs Word.cs"
+SOLUTION_NAME="Conquer"
+SRC_FILES="Program.cs Cipher.cs Compress.cs"
+REFERENCES="System.Drawing.dll nunit.framework.dll"
 NCPS1="${BLINK}>${RESET} "
 
 install_nunit()
 {
 	echo ${BLUE}Installing nunit-console nuget and mono packages...${RESET}
-	sudo apt install -y nunit-console nuget mono
+	sudo apt install nunit-console
+	sudo apt install nunit-gui
+	sudo apt install nuget
+	sudo apt install mono
 
 	echo ${BLUE}Versions:${RESET}
 	mono -V | head -1
@@ -33,13 +37,13 @@ install_nunit()
 
 	echo ${BLUE}Installing NUnit...${RESET}
 	#nuget install nunit
-	nuget install nunit -version 2.6.4
+	nuget install nunit -version 3.11.0 # Or 1.6.4
 
 	echo ${BLUE}Moving nunit.framework.dll to current folder...${RESET}
-	mv NUnit.2.6.4/lib/nunit.framework.dll .
+	mv NUnit.3.11.0/lib/net45/nunit.framework.dll .
 
 	echo ${BLUE}Removing NUnit directory...${RESET}
-	rm -rf NUnit.2.6.4/
+	rm -rf NUnit.3.11.0/
 }
 
 help()
@@ -125,11 +129,16 @@ correct()
             SOURCES="${SOURCES} $(dirname ${DIR})/${SRC}"
 		done
 
+        REFS=""
+		for REF in ${REFERENCES} ; do
+            REFS="${REFS} /r:${REF}"
+		done
+
 		OUTFILE="${STUDENT}_${SOLUTION_NAME}.exe"
 
 		echo ${BLUE}Compiling...${RESET}
 		echo
-		${CSC} ${TEST_FILE} ${SOURCES} /r:nunit.framework.dll -out:${OUTFILE}
+		${CSC} ${TEST_FILE} ${SOURCES} ${REFS} -out:${OUTFILE}
 
 		if [ $? -eq 1 ] ; then
 			compile_error
