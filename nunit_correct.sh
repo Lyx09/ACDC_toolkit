@@ -83,8 +83,10 @@ mini_cli()
             exit 0
         elif [ "${INPUT}" = "display" ] || [ "${INPUT}" = "d" ] ; then
             echo "FIXME"
+        elif [ "${INPUT}" = "compile" ] || [ "${INPUT}" = "c" ] ; then
+            compile
         elif [ "${INPUT}" = "edit" ] || [ "${INPUT}" = "e" ] ; then
-            echo "FIXME"
+            ${EDITOR} ${EDITOR_OPTIONS} ${SOURCES}
         else
             echo "Unknown command, type \"help\" to get the list of commands."
         fi
@@ -144,8 +146,10 @@ clean()
 # Initialize the parameters
 init()
 {
-    CSC=csc #csc also works
+    CSC=mcs #csc also works
     NUNIT=tc-next.exe #nunit-gui and nunit-console also worked pre NUnit 3.0
+    EDITOR=vim # rider / monodevelop or emacs also works
+    EDITOR_OPTION=-p # open all files in multiple tabs
     SUBMISSION_DIR=$1
     TEST_FILE=$2
     SOLUTION_NAME="Conquer"
