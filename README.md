@@ -15,6 +15,11 @@ and extract nunit.framework.dll needed to compile the tests. Then for every
 student in the submission folder. the script will compile the project and run
 the tests.
 
+Remarks:
+- \t is not yet supported for multiple argument commands.
+- You can put i3's focus_on_window_activation to urgent instead of smart to
+disable the autofocus when TestCentric's window opens.
+
 
 One can must change the content of the variables SOLUTION_NAME and
 SRC_FILES according to the solution to correct (These variables are set at the
