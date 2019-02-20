@@ -15,15 +15,15 @@ RESET="\e[0m"
 
 CSC=mcs #csc also works
 CSCFLAGS=
-NUNIT=tc-next.exe #nunit-gui and nunit-console also worked pre NUnit 3.0
 EDITOR=vim # rider / monodevelop or emacs also works
-EDITOR_OPTIONS=-p # open all files in multiple tabs
+EDITORFLAGS=-p # open all files in multiple tabs
+RUNNER=tc-next.exe # nunit-gui and nunit-console also worked pre NUnit 3.0
+NCPS1="${BLINK}>${RESET} "
+
 SUBMISSION_DIR=$1
 TEST_FILE=$2
 SOLUTION_NAME="Conquer"
-SRC_FILES="Program.cs Cipher.cs Compress.cs"
-REFERENCES="System.Drawing.dll nunit.framework.dll"
-NCPS1="${BLINK}>${RESET} "
+REFERENCES="nunit.framework.dll System.Drawing.dll"
 
 install_nunit()
 {
@@ -76,8 +76,10 @@ help()
 
 mini_cli()
 {
-    # Running Nunit for student submission
-    (${NUNIT} ${OUTFILE} 2>/dev/null)&
+    # Running Nunit for student submission if compile passed
+    if [ $? -eq 0 ] ; then
+        (${RUNNER} ${OUTFILE} 2>/dev/null)&
+    fi
     NUNIT_PID=$!
     while true; do
         printf "${NCPS1}"
@@ -101,7 +103,7 @@ mini_cli()
             fi
         elif [ "${INPUT}" = "relaunch" ] || [ "${INPUT}" = "r" ] ; then
             kill ${NUNIT_PID}
-            (${NUNIT} ${OUTFILE} 2>/dev/null)&
+            (${RUNNER} ${OUTFILE} 2>/dev/null)&
             NUNIT_PID=$!
         elif [ "${INPUT}" = "quit" ] || [ "${INPUT}" = "q" ] ; then
             kill ${NUNIT_PID}
@@ -113,7 +115,7 @@ mini_cli()
         elif [ "${INPUT}" = "compile" ] || [ "${INPUT}" = "c" ] ; then
             compile
         elif [ "${INPUT}" = "edit" ] || [ "${INPUT}" = "e" ] ; then
-            ${EDITOR} ${EDITOR_OPTIONS} ${SOURCES} 1>/dev/null
+            ${EDITOR} ${EDITORFLAGS} ${SOURCES} 1>/dev/null
         elif [ "${INPUT}" = "tig" ] ; then
             cd ${DIR_LIST[IDX]}; tig; cd - 1>/dev/null
         elif [ "${INPUT}" = "list" ] || [ "${INPUT}" = "l" ] ; then
@@ -157,6 +159,7 @@ compile()
     ${CSC} ${CSCFLAGS} ${TEST_FILE} ${SOURCES} ${REFS} -out:${OUTFILE}
     if [ $? -eq 1 ] ; then
         echo -e "${RED}!!! COMPILE ERROR !!!${RESET}"
+        false
     fi
 }
 
