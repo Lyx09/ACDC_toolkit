@@ -10,3 +10,5 @@ nunit_correct.sh
 [ ] Refactor
 [ ] Parse a config file to setup variables
 [ ] Allow e option to edit specific file "e Program.cs"
+[ ] Add more options
+[ ] Format total time at the end
