@@ -55,7 +55,10 @@ help()
 {
     echo "--- NUnit Correct (v1.0) ---"
     echo "help, h:      Displays this menu"
+    echo "info, i:      Displays info about the current student"
     echo "clear:        Clears the screen"
+    echo "list, l:      TODO: Lists the submission and their associated number"
+    echo "jump #, j #:  TODO: Jumps to the specified submission"
     echo "next, n:      Correct the next student"
     echo "previous, p:  Correct the previous student"
     echo "relaunch, r:  Relaunch nunit"
@@ -65,9 +68,9 @@ help()
     echo "tree, t:      Run the tree command at the root of the repo"
     echo "tig:          Run the tig command at the root of the repo"
     echo "gitlog, gl:   Run the git log commang at the root of the repo"
-    echo "readme, r:    Display the READMEFILE at the root of the repo"
+    echo "readme:       Display the README file at the root of the repo"
     echo "display, d:   TODO: Display the specified function"
-    echo "FIXME"
+    echo "command CMD:  TODO: Executes the command at the root"
     echo "----------------------------"
 }
 
@@ -78,15 +81,24 @@ mini_cli()
     NUNIT_PID=$!
     while true; do
         printf "${NCPS1}"
-        read INPUT
+        read FULL_INPUT
+        INPUT=$(echo "${FULL_INPUT}" | cut -d " " -f 1 )
         if [ "${INPUT}" = "help" ] || [ "${INPUT}" = "h" ] ; then
             help
+        elif [ "${INPUT}" = "clear" ] ; then
+            clear
+        elif [ "${INPUT}" = "info" ] || [ "${INPUT}" = "i" ] ; then
+            echo -e ${BLUE}STUDENT: ${YELL} ${STUDENT} ${RESET} ${IDX}/$((TOTAL - 1))
         elif [ "${INPUT}" = "next" ] || [ "${INPUT}" = "n" ] ; then
             IDX=$((IDX + 1))
             break
         elif [ "${INPUT}" = "previous" ] || [ "${INPUT}" = "p" ] ; then
-            IDX=$((IDX - 1))
-            break
+            if [ ${IDX} -eq 0 ] ; then
+                echo "No previous submission"
+            else
+                IDX=$((IDX - 1))
+                break
+            fi
         elif [ "${INPUT}" = "relaunch" ] || [ "${INPUT}" = "r" ] ; then
             kill ${NUNIT_PID}
             (${NUNIT} ${OUTFILE} 2>/dev/null)&
@@ -101,7 +113,30 @@ mini_cli()
         elif [ "${INPUT}" = "compile" ] || [ "${INPUT}" = "c" ] ; then
             compile
         elif [ "${INPUT}" = "edit" ] || [ "${INPUT}" = "e" ] ; then
-            ${EDITOR} ${EDITOR_OPTIONS} ${SOURCES}
+            ${EDITOR} ${EDITOR_OPTIONS} ${SOURCES} 1>/dev/null
+        elif [ "${INPUT}" = "tig" ] ; then
+            cd ${DIR_LIST[IDX]}; tig; cd - 1>/dev/null
+        elif [ "${INPUT}" = "list" ] || [ "${INPUT}" = "l" ] ; then
+            for IT in "${!DIR_LIST[@]}"; do
+                printf "%s\t%s\n" "${IT}" "$(basename ${DIR_LIST[${IT}]})"
+            done
+        elif [ "${INPUT}" = "jump" ] || [ "${INPUT}" = "j" ] ; then
+            # Cannot be put in a separate function since it uses break
+            NB=$(echo ${FULL_INPUT} | cut -d " " -f 2)
+            if ! [[ "${NB}" =~ ^[0-9]+$ ]] ; then
+                echo "${NB} is not a number"
+            elif [ ${NB} -gt ${TOTAL} ] ; then
+                echo "No submission match ${NB}. You should check: list"
+            else
+                IDX=${NB}
+                break
+            fi
+        elif [ "${INPUT}" = "tree" ] || [ "${INPUT}" = "t" ] ; then
+            cd ${DIR_LIST[IDX]}; tree; cd - 1>/dev/null
+        elif [ "${INPUT}" = "gitlog" ] || [ "${INPUT}" = "gl" ] ; then
+            cd ${DIR_LIST[IDX]}; git log; cd - 1>/dev/null
+        elif [ "${INPUT}" = "readme" ] ; then
+            cd ${DIR_LIST[IDX]}; find -iname "*README*" -type f | xargs less; cd -
         else
             echo -e "Unknown command, type \"help\" to get the list of commands."
         fi
@@ -116,7 +151,7 @@ mini_cli()
 compile()
 {
     echo -e ${BLUE}Compiling...${RESET}
-    echo -e
+    echo
     ${CSC} ${CSCFLAGS} ${TEST_FILE} ${SOURCES} ${REFS} -out:${OUTFILE}
     if [ $? -eq 1 ] ; then
         echo -e "${RED}!!! COMPILE ERROR !!!${RESET}"
@@ -142,7 +177,7 @@ correct()
 
     while [ ${IDX} -ne ${TOTAL} ] ; do
         STUDENT=$(basename ${DIR_LIST[IDX]})
-        echo -e ${BLUE}STUDENT: ${YELL} ${STUDENT} ${RESET} ${IDX}/${TOTAL}
+        echo -e ${BLUE}STUDENT: ${YELL} ${STUDENT} ${RESET} ${IDX}/$((TOTAL - 1))
         DIR=${DIR_LIST[IDX]}/${SOLUTION_NAME}/${SOLUTION_NAME}
 
         SOURCES=$(find ${DIR} -name "*.cs")
@@ -185,7 +220,7 @@ main()
         printf "NUnit framework was already installed "
     fi
     echo -e "${GREEN}✔${RESET}"
-    echo -e "${YELL}${BLINK}Press ENTER to start correction${RESET}"
+    echo -e "${YELL}${BLINK}Press ENTER to start correction: Good luck!${RESET}"
     read ANSWER
     clear
     correct
@@ -193,4 +228,4 @@ main()
     echo -e ${BLUE}---[NUNIT CORRECT END]---${RESET}
 }
 
-main
+time main
