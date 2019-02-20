@@ -123,10 +123,12 @@ mini_cli()
         elif [ "${INPUT}" = "jump" ] || [ "${INPUT}" = "j" ] ; then
             # Cannot be put in a separate function since it uses break
             NB=$(echo ${FULL_INPUT} | cut -d " " -f 2)
-            if ! [[ "${NB}" =~ ^[0-9]+$ ]] ; then
+            if [ ${NB} = "j" ] ; then
+                echo "Please specify a number to jump to. See: list"
+            elif ! [[ "${NB}" =~ ^[0-9]+$ ]] ; then
                 echo "${NB} is not a number"
             elif [ ${NB} -gt ${TOTAL} ] ; then
-                echo "No submission match ${NB}. You should check: list"
+                echo "No submission match ${NB}. See: list"
             else
                 IDX=${NB}
                 break
