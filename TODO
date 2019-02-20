@@ -9,3 +9,4 @@ nunit_correct.sh
 [ ] Print function when asked
 [ ] Refactor
 [ ] Parse a config file to setup variables
+[ ] Allow e option to edit specific file "e Program.cs"
