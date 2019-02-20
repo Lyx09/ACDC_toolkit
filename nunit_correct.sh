@@ -25,6 +25,9 @@ TEST_FILE=$2
 SOLUTION_NAME="Conquer"
 REFERENCES="nunit.framework.dll System.Drawing.dll"
 
+trap quit SIGINT SIGTERM
+bind -x '"\C-l": clear' # not working
+
 install_nunit()
 {
     echo -e ${BLUE}Installing nunit-console nuget mono packages and TestCentric...${RESET}
@@ -74,6 +77,14 @@ help()
     echo "----------------------------"
 }
 
+quit()
+{
+    kill ${NUNIT_PID}
+    rm -f ${OUTFILE} ${OUTFILE}.VisualState.xml
+    clear
+    exit 0
+}
+
 mini_cli()
 {
     # Running Nunit for student submission if compile passed
@@ -106,10 +117,7 @@ mini_cli()
             (${RUNNER} ${OUTFILE} 2>/dev/null)&
             NUNIT_PID=$!
         elif [ "${INPUT}" = "quit" ] || [ "${INPUT}" = "q" ] ; then
-            kill ${NUNIT_PID}
-            rm -f ${OUTFILE} ${OUTFILE}.VisualState.xml
-            clear
-            exit 0
+            quit
         elif [ "${INPUT}" = "display" ] || [ "${INPUT}" = "d" ] ; then
             echo -e "FIXME"
         elif [ "${INPUT}" = "compile" ] || [ "${INPUT}" = "c" ] ; then
