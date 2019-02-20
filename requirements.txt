@@ -1,0 +1,7 @@
+less
+tig
+git
+mono
+nunit
+nuget
+nunit-console
