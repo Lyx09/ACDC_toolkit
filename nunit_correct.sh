@@ -54,19 +54,18 @@ install_nunit()
 help()
 {
     echo "--- NUnit Correct (v1.0) ---"
-    echo "help, h:     displays this menu"
-    echo "next, n:     correct the next student"
-    echo "previous:"
-    echo "relaunch, r: relaunch nunit"
-    echo "quit, q:     quit nunit correct"
-    echo "edit, e:     launch your prefered editor"
-    echo "display, d:  display the specified function"
-    echo "compile, c:    Compile the project once more"
-    echo "tree: "
-    echo "gitlog:"
-    echo "readme:"
-
-
+    echo "help, h:      Displays this menu"
+    echo "next, n:      Correct the next student"
+    echo "previous, p:  Correct the previous student"
+    echo "relaunch, r:  Relaunch nunit"
+    echo "quit, q:      Quit nunit correct"
+    echo "edit, e:      Launch your prefered editor"
+    echo "compile, c:   Compile the project once more"
+    echo "tree, t:      Run the tree command at the root of the repo"
+    echo "tig:          Run the tig command at the root of the repo"
+    echo "gitlog, gl:   Run the git log commang at the root of the repo"
+    echo "readme, r:    Display the READMEFILE at the root of the repo"
+    echo "display, d:   TODO: Display the specified function"
     echo "FIXME"
     echo "----------------------------"
 }
