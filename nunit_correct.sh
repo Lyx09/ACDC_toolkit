@@ -13,6 +13,17 @@ GREEN="\e[32m"
 BLINK="\e[5m"
 RESET="\e[0m"
 
+CSC=msc #csc also works
+CSCFLAGS=
+NUNIT=tc-next.exe #nunit-gui and nunit-console also worked pre NUnit 3.0
+EDITOR=vim # rider / monodevelop or emacs also works
+EDITOR_OPTIONS=-p # open all files in multiple tabs
+SUBMISSION_DIR=$1
+TEST_FILE=$2
+SOLUTION_NAME="Conquer"
+SRC_FILES="Program.cs Cipher.cs Compress.cs"
+REFERENCES="System.Drawing.dll nunit.framework.dll"
+NCPS1="${BLINK}>${RESET} "
 
 install_nunit()
 {
@@ -100,7 +111,7 @@ mini_cli()
 
 compile()
 {
-    ${CSC} ${TEST_FILE} ${SOURCES} ${REFS} -out:${OUTFILE}
+    ${CSC} ${CSCFLAGS} ${TEST_FILE} ${SOURCES} ${REFS} -out:${OUTFILE}
 }
 
 correct()
@@ -144,24 +155,15 @@ clean()
 }
 
 # Initialize the parameters
-init()
+parse_config()
 {
-    CSC=mcs #csc also works
-    NUNIT=tc-next.exe #nunit-gui and nunit-console also worked pre NUnit 3.0
-    EDITOR=vim # rider / monodevelop or emacs also works
-    EDITOR_OPTION=-p # open all files in multiple tabs
-    SUBMISSION_DIR=$1
-    TEST_FILE=$2
-    SOLUTION_NAME="Conquer"
-    SRC_FILES="Program.cs Cipher.cs Compress.cs"
-    REFERENCES="System.Drawing.dll nunit.framework.dll"
-    NCPS1="${BLINK}>${RESET} "
+    echo "FIXME"
+    # FIXME: Parse config file
 }
 
 main()
 {
     clear
-    init
     echo ${BLUE}---[NUNIT CORRECT START]---${RESET}
     if [ ! -f nunit.framework.dll ] ; then
         install_nunit
