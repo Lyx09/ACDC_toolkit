@@ -8,3 +8,4 @@ nunit_correct.sh
 [X] Kill NUnit-gui when correcting next student
 [ ] Print function when asked
 [ ] Refactor
+[ ] Parse a config file to setup variables
