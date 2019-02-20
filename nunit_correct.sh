@@ -13,14 +13,6 @@ GREEN="\e[32m"
 BLINK="\e[5m"
 RESET="\e[0m"
 
-CSC=csc #csc also works
-NUNIT=tc-next.exe #nunit-gui and nunit-console also worked pre NUnit 3.0
-SUBMISSION_DIR=$1
-TEST_FILE=$2
-SOLUTION_NAME="Conquer"
-SRC_FILES="Program.cs Cipher.cs Compress.cs"
-REFERENCES="System.Drawing.dll nunit.framework.dll"
-NCPS1="${BLINK}>${RESET} "
 
 install_nunit()
 {
@@ -104,16 +96,9 @@ mini_cli()
     rm -f ${OUTFILE} ${OUTFILE}.VisualState.xml
 }
 
-compile_error()
+compile()
 {
-    echo "${RED}!!! COMPILE ERROR !!!${RESET}"
-    echo "${YELL}${BLINK}Press ENTER to continue or type something to retry${RESET}"
-    read ANSWER
-    while [ "${ANSWER}" != "" ] ; do
-        ${CSC} ${TEST_FILE} ${SOURCES} /r:nunit.framework.dll -out:${OUTFILE}
-        echo "${YELL}${BLINK}Press ENTER to continue or type something to retry${RESET}"
-        read ANSWER
-    done
+    ${CSC} ${TEST_FILE} ${SOURCES} ${REFS} -out:${OUTFILE}
 }
 
 correct()
@@ -140,13 +125,12 @@ correct()
 
         echo ${BLUE}Compiling...${RESET}
         echo
-        ${CSC} ${TEST_FILE} ${SOURCES} ${REFS} -out:${OUTFILE}
+        compile
 
         if [ $? -eq 1 ] ; then
-            compile_error
-        else
-            mini_cli
+            echo "${RED}!!! COMPILE ERROR !!!${RESET}"
         fi
+        mini_cli
         clear
         COUNT=$((COUNT + 1))
     done
@@ -157,9 +141,23 @@ clean()
     rm -f TestResult.xml
 }
 
+# Initialize the parameters
+init()
+{
+    CSC=csc #csc also works
+    NUNIT=tc-next.exe #nunit-gui and nunit-console also worked pre NUnit 3.0
+    SUBMISSION_DIR=$1
+    TEST_FILE=$2
+    SOLUTION_NAME="Conquer"
+    SRC_FILES="Program.cs Cipher.cs Compress.cs"
+    REFERENCES="System.Drawing.dll nunit.framework.dll"
+    NCPS1="${BLINK}>${RESET} "
+}
+
 main()
 {
     clear
+    init
     echo ${BLUE}---[NUNIT CORRECT START]---${RESET}
     if [ ! -f nunit.framework.dll ] ; then
         install_nunit
