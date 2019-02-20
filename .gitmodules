@@ -1,0 +1,3 @@
+[submodule "TestCentric"]
+	path = TestCentric
+	url = git@github.com:TestCentric/testcentric-gui.git
