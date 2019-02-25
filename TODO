@@ -2,7 +2,7 @@ nunit_correct.sh
 [X] Don't install when nunit.framework.dll already exists.
 [ ] ./nc -s solution -c csc -n nunit-gui
 [ ] Lauch NC on a specific student
-[ ] Catch signals (C^v + C^d + C^l)
+[X] Catch signals (C^v + C^d)
 [ ] Pad announce messages in the center
 [ ] Option to specify where nunit.framework.dll is
 [X] Kill NUnit-gui when correcting next student
@@ -12,3 +12,4 @@ nunit_correct.sh
 [ ] Allow e option to edit specific file "e Program.cs"
 [ ] Add more options
 [ ] Format total time at the end
+[ ] Use a wrapper over readline to use C^l
