@@ -123,7 +123,7 @@ mini_cli()
         elif [ "${INPUT}" = "compile" ] || [ "${INPUT}" = "c" ] ; then
             compile
         elif [ "${INPUT}" = "edit" ] || [ "${INPUT}" = "e" ] ; then
-            ${EDITOR} ${EDITORFLAGS} ${SOURCES} 1>/dev/null
+            ${EDITOR} ${EDITORFLAGS} ${SOURCES}
         elif [ "${INPUT}" = "tig" ] ; then
             cd ${DIR_LIST[IDX]}; tig; cd - 1>/dev/null
         elif [ "${INPUT}" = "list" ] || [ "${INPUT}" = "l" ] ; then
