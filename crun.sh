@@ -63,8 +63,8 @@ help()
     echo "gitlog, gl:   Run the git log commang at the root of the repo"
     echo "help, h:      Displays this menu"
     echo "info, i:      Displays info about the current student"
-    echo "jump #, j #:  TODO: Jumps to the specified submission"
-    echo "list, l:      TODO: Lists the submission and their associated number"
+    echo "jump #, j #:  Jumps to the specified submission"
+    echo "list, l:      Lists the submission and their associated number"
     echo "next, n:      Correct the next student"
     echo "previous, p:  Correct the previous student"
     echo "quit, q:      Quit nunit correct"
@@ -229,8 +229,9 @@ main()
     # Location of this script
     SCRIPT_LOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
     TEST_CENTRIC=${SCRIPT_LOC}/TestCentric/
+    echo ${TEST_CENTRIC}
     PATH=${PATH}:${TEST_CENTRIC}
-    
+
     if [ ! -f nunit.framework.dll ] ; then
         install_nunit
         printf "NUnit framework is now installed "
