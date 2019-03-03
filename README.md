@@ -6,26 +6,56 @@ For any remark and/or if you noticed a mistake please contact me.
 To correct a submission one should use the scripts public.sh through run.sh in
 order. Or use correct.sh. Another solution is to use nunit_correct.sh.
 
-## nunit_correct.sh
-Requires 2 argument: Path to the submissions folder and path to the NUnit ".cs"
-test file.
-Example: ./nunit_correct.sh ../csharp-tp3/ ../ACDC-GIT/moulinette/tests_s1_tpcs3/BasicTests.cs 
-This script will automatically install NUnit(v. 2.6.4) nuget and mono via apt
+## crun.sh
+(__C__orrection __RUN__.sh)
+
+Requires 3 argument: Path to the submissions folder, Solution name and path to
+the NUnit ".cs" test file.
+
+This script will automatically install NUnit(v. 3.11.0) nuget and mono via apt
 and extract nunit.framework.dll needed to compile the tests. Then for every
 student in the submission folder. the script will compile the project and run
 the tests.
+
+#### BEFORE RUNING THE TESTS
+You should install all the packet dependencies listed in requirements.txt.
+
+Also, if your practical needs a specific dll (for example System.Drawing.dll to
+manipulate images) then specify the dll in the REFERENCES variable of the
+script (At the beginning of the script)
+
+#### RUNNING THE TESTS
+To run the test you should put call the script with these arguments in the
+following order:
+- Submission folder (Folder containing the students submission
+(if you cloned the repository using pull.sh, then the folder should be named
+csharp-tp__X__ ))
+- Solution Name ("Conquer", "TinyMarkovChain", ...)
+- NUnit Unit test file (The test file provided by the subject maintainer)
+
+Example: ./crun.sh csharp-tp8/ Conquer ConquerTest.cs
+
+Note: Apparently many students don't know how to make a correct submission
+(bad solution name, bad architecture...) unfortunately you'll have to fix that
+by hand :-[ .
+
+One may change the CSC (C Sharp Compiler), EDITOR (default: vim), and RUNNER
+variables of the script as they please.
+
+### WHILE RUNNING THE SCRIPT
+If a solution doesn't compile (which will happen more often than not) you can
+edit the *.cs file by hand or use __e__ to edit the files in the current window
+then compile the files again using __c__ and launch the runner with __r__ (try
+__h__ to have a list of all commands and play with it).
+If the architecture is not correct (use __tree__ to check) then you'll have
+to fix it in another terminal. Once done you need to update the variables
+(__next__ then __previous__ or __jump__ to the current student index
+(use __info__ or __list__))
 
 Remarks:
 - \t is not yet supported for multiple argument commands.
 - You can put i3's focus_on_window_activation to urgent instead of smart to
 disable the autofocus when TestCentric's window opens.
-
-
-One can must change the content of the variables SOLUTION_NAME and
-SRC_FILES according to the solution to correct (These variables are set at the
-begining of the script). One may also change the CSC (C Sharp Compiler) to use
-and the NUNIT varable.
-
 
 ## public.sh
 Requires 1 argument: Path to the submissions folder.

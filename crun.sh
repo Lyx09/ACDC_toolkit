@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ $# != 2 ] ; then
+if [ $# != 3 ] ; then
     echo -e "Missing argument."
-    echo -e "Usage: ./nunit_correct.sh SUBMISSION_DIRECTORY UNIT_TEST_FILE"
+    echo -e "Usage: ./nunit_correct.sh SUBMISSION_DIRECTORY SOLUTION_NAME UNIT_TEST_FILE"
     exit
 fi
 
@@ -18,11 +18,11 @@ CSCFLAGS=
 EDITOR=vim # rider / monodevelop or emacs also works
 EDITORFLAGS=-p # open all files in multiple tabs
 RUNNER=tc-next.exe # nunit-gui and nunit-console also worked pre NUnit 3.0
-NCPS1="${BLINK}>${RESET} "
+CPS1="${BLINK}>${RESET} "
 
 SUBMISSION_DIR=$1
-TEST_FILE=$2
-SOLUTION_NAME="Conquer"
+SOLUTION_NAME=$2
+TEST_FILE=$3
 REFERENCES="nunit.framework.dll System.Drawing.dll"
 
 trap quit SIGINT SIGTERM
@@ -35,8 +35,6 @@ install_nunit()
     sudo apt install nunit-gui
     sudo apt install nuget
     sudo apt install mono
-    git clone git@github.com:TestCentric/testcentric-gui.git
-    PATH=$PATH:${PWD}/TestCentric
 
     echo -e ${BLUE}Versions:${RESET}
     mono -V | head -1
@@ -93,7 +91,7 @@ mini_cli()
     fi
     NUNIT_PID=$!
     while true; do
-        printf "${NCPS1}"
+        printf "${CPS1}"
         read FULL_INPUT
         INPUT=$(echo "${FULL_INPUT}" | cut -d " " -f 1 )
         if [ "${INPUT}" = "help" ] || [ "${INPUT}" = "h" ] ; then
@@ -226,6 +224,13 @@ main()
 {
     clear
     echo -e ${BLUE}---[NUNIT CORRECT START]---${RESET}
+
+    # Adding test centric to your path
+    # Location of this script
+    SCRIPT_LOC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+    TEST_CENTRIC=${SCRIPT_LOC}/TestCentric/
+    PATH=${PATH}:${TEST_CENTRIC}
+    
     if [ ! -f nunit.framework.dll ] ; then
         install_nunit
         printf "NUnit framework is now installed "
