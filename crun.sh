@@ -2,7 +2,7 @@
 
 if [ $# != 3 ] ; then
     echo -e "Missing argument."
-    echo -e "Usage: ./nunit_correct.sh SUBMISSION_DIRECTORY SOLUTION_NAME UNIT_TEST_FILE"
+    echo -e "Usage: ./crun.sh SUBMISSION_DIRECTORY SOLUTION_NAME UNIT_TEST_FILE"
     exit
 fi
 
@@ -55,23 +55,23 @@ install_nunit()
 help()
 {
     echo "--- NUnit Correct (v1.0) ---"
-    echo "clear:        Clears the screen"
-    echo "command CMD:  TODO: Executes the command at the root"
-    echo "compile, c:   Compile the project once more"
-    echo "display, d:   TODO: Display the specified function"
-    echo "edit, e:      Launch your prefered editor"
-    echo "gitlog, gl:   Run the git log commang at the root of the repo"
-    echo "help, h:      Displays this menu"
-    echo "info, i:      Displays info about the current student"
-    echo "jump #, j #:  Jumps to the specified submission"
-    echo "list, l:      Lists the submission and their associated number"
-    echo "next, n:      Correct the next student"
-    echo "previous, p:  Correct the previous student"
-    echo "quit, q:      Quit nunit correct"
-    echo "readme:       Display the README file at the root of the repo"
-    echo "relaunch, r:  Relaunch nunit"
-    echo "tig:          Run the tig command at the root of the repo"
-    echo "tree, t:      Run the tree command at the root of the repo"
+    echo "clear:         Clears the screen"
+    echo "command CMD:   TODO: Executes the command at the root"
+    echo "compile, c:    Compile the project once more"
+    echo "display, d:    TODO: Display the specified function"
+    echo "edit, e:       Launch your prefered editor"
+    echo "gitlog, gl:    Run the git log commang at the root of the repo"
+    echo "help, h:       Displays this menu"
+    echo "info, i:       Displays info about the current student"
+    echo "jump #, j #:   Jumps to the specified submission"
+    echo "list, l:       Lists the submission and their associated number"
+    echo "next, n:       Correct the next student"
+    echo "previous, p:   Correct the previous student"
+    echo "quit, exit, q: Quit nunit correct"
+    echo "readme:        Display the README file at the root of the repo"
+    echo "relaunch, r:   Relaunch nunit"
+    echo "tig:           Run the tig command at the root of the repo"
+    echo "tree, t:       Run the tree command at the root of the repo"
     echo "----------------------------"
 }
 
@@ -114,7 +114,7 @@ mini_cli()
             kill ${NUNIT_PID}
             (${RUNNER} ${OUTFILE} 2>/dev/null)&
             NUNIT_PID=$!
-        elif [ "${INPUT}" = "quit" ] || [ "${INPUT}" = "q" ] ; then
+        elif [ "${INPUT}" = "quit" ] || [ "${INPUT}" = "q" ] || [ "${INPUT}" = "exit" ]; then
             quit
         elif [ "${INPUT}" = "display" ] || [ "${INPUT}" = "d" ] ; then
             echo -e "FIXME"
